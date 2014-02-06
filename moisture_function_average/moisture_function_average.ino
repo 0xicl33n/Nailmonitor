@@ -51,12 +51,12 @@ int SoilMoisture(int top,int bottom, int probe){
     digitalWrite(badLED, LOW);
   
   // set driver pins to outputs
-    pinMode(divider_top,OUTPUT);
-    pinMode(divider_bottom,OUTPUT);
+    pinMode(top,OUTPUT);
+    pinMode(bottom,OUTPUT);
 
   // drive a current through the divider in one direction
-    digitalWrite(divider_top,LOW);
-    digitalWrite(divider_bottom,HIGH);
+    digitalWrite(top,LOW);
+    digitalWrite(bottom,HIGH);
 
   // wait a moment for capacitance effects to settle
     delay(1000);
@@ -66,8 +66,8 @@ int SoilMoisture(int top,int bottom, int probe){
     reading=analogRead(probe) + reading;
 
   // reverse the current
-  digitalWrite(divider_top,HIGH);
-  digitalWrite(divider_bottom,LOW);
+  digitalWrite(top,HIGH);
+  digitalWrite(bottom,LOW);
 
   // give as much time in 'reverse' as in 'forward'
   
