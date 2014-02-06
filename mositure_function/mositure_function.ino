@@ -41,7 +41,7 @@ const int wet = 300;
 //
 int moisture; // analogical value obtained from the experiment
 
-int SoilMoisture(){
+int SoilMoisture(int top,int bottom){
   int reading;
   digitalWrite(progressLED, HIGH);
   digitalWrite(goodLED, LOW);// clear leds
@@ -91,7 +91,7 @@ void setup () {
 }
 
 void loop (void) {
-  moisture=SoilMoisture(); // assign the result of SoilMoisture() to the global variable 'moisture'
+  moisture=SoilMoisture(divider_top,divider_bottom); // assign the result of SoilMoisture() to the global variable 'moisture'
   Serial.print("[*] Soil moisture: ");
   Serial.print(moisture); // print the analogical measurement of the experiment
   Serial.println();

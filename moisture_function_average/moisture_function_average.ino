@@ -41,26 +41,29 @@ const int wet = 300;
 //
 int moisture; // analogical value obtained from the experiment
 
-int SoilMoisture(){
-  int reading;
-  digitalWrite(progressLED, HIGH);
-  digitalWrite(goodLED, LOW);// clear leds
-  digitalWrite(badLED, LOW);
+int SoilMoisture(int top,int bottom, int probe){
+  int i;
+  int reading = 0;
+  for (i = 0; i < 5 ; i++){ //take 5 readings
+    
+    digitalWrite(progressLED, HIGH);
+    digitalWrite(goodLED, LOW);// clear leds
+    digitalWrite(badLED, LOW);
   
   // set driver pins to outputs
-  pinMode(divider_top,OUTPUT);
-  pinMode(divider_bottom,OUTPUT);
+    pinMode(divider_top,OUTPUT);
+    pinMode(divider_bottom,OUTPUT);
 
   // drive a current through the divider in one direction
-  digitalWrite(divider_top,LOW);
-  digitalWrite(divider_bottom,HIGH);
+    digitalWrite(divider_top,LOW);
+    digitalWrite(divider_bottom,HIGH);
 
   // wait a moment for capacitance effects to settle
-  delay(1000);
-  digitalWrite(progressLED, LOW);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
 
   // take a reading
-  reading=analogRead(moisture_input);
+    reading=analogRead(probe) + reading;
 
   // reverse the current
   digitalWrite(divider_top,HIGH);
@@ -68,17 +71,20 @@ int SoilMoisture(){
 
   // give as much time in 'reverse' as in 'forward'
   
-  delay(1000);
-  digitalWrite(progressLED, HIGH);
+    delay(1000);
+    digitalWrite(progressLED, HIGH);
   // stop the current
-  digitalWrite(divider_bottom,LOW);
-  delay(1000);
-  digitalWrite(progressLED, LOW);
-  delay(1000);
-  digitalWrite(progressLED,HIGH);
-  delay(1000);
-  digitalWrite(progressLED, LOW);
-
+    digitalWrite(divider_bottom,LOW);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
+    delay(1000);
+    digitalWrite(progressLED,HIGH);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
+    //final delay before next reading
+    delay(1000);
+  }
+  reading = reading / 5; //get average
   return reading;
 }
 
@@ -91,7 +97,7 @@ void setup () {
 }
 
 void loop (void) {
-  moisture=SoilMoisture(); // assign the result of SoilMoisture() to the global variable 'moisture'
+  moisture=SoilMoisture(divider_top,divider_bottom,moisture_input); // assign the result of SoilMoisture() to the global variable 'moisture'
   Serial.print("[*] Soil moisture: ");
   Serial.print(moisture); // print the analogical measurement of the experiment
   Serial.println();

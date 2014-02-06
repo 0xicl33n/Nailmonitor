@@ -42,46 +42,50 @@ const int wet = 300;
 int moisture; // analogical value obtained from the experiment
 
 int SoilMoisture(){
-  int reading;
-  digitalWrite(progressLED, HIGH);
-  digitalWrite(goodLED, LOW);// clear leds
-  digitalWrite(badLED, LOW);
+  int reading= 0;
+  int i;
+  for (i = 0; i < 5; i++){ //take 5 readings
+    digitalWrite(progressLED, HIGH);
+    digitalWrite(goodLED, LOW);// clear leds
+    digitalWrite(badLED, LOW);
   
   // set driver pins to outputs
-  pinMode(divider_top,OUTPUT);
-  pinMode(divider_bottom,OUTPUT);
+    pinMode(divider_top,OUTPUT);
+    pinMode(divider_bottom,OUTPUT);
 
   // drive a current through the divider in one direction
-  digitalWrite(divider_top,LOW);
-  digitalWrite(divider_bottom,HIGH);
+    digitalWrite(divider_top,LOW);
+    digitalWrite(divider_bottom,HIGH);
 
   // wait a moment for capacitance effects to settle
-  delay(1000);
-  digitalWrite(progressLED, LOW);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
 
-  // take a reading
-  reading=analogRead(moisture_input);
+  // read
+    reading=analogRead(moisture_input) + reading;
 
   // reverse the current
-  digitalWrite(divider_top,HIGH);
-  digitalWrite(divider_bottom,LOW);
+    digitalWrite(divider_top,HIGH);
+    digitalWrite(divider_bottom,LOW);
 
   // give as much time in 'reverse' as in 'forward'
   
-  delay(1000);
-  digitalWrite(progressLED, HIGH);
+    delay(1000);
+    digitalWrite(progressLED, HIGH);
   // stop the current
-  digitalWrite(divider_bottom,LOW);
-  delay(1000);
-  digitalWrite(progressLED, LOW);
-  delay(1000);
-  digitalWrite(progressLED,HIGH);
-  delay(1000);
-  digitalWrite(progressLED, LOW);
-
-  return reading;
+    digitalWrite(divider_bottom,LOW);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
+    delay(1000);
+    digitalWrite(progressLED,HIGH);
+    delay(1000);
+    digitalWrite(progressLED, LOW);
+    //final delay before next reading
+    delay(1000);
+  }
+  reading = reading / 5; //get average or readings
+  return reading; //return it
 }
-
 
 void setup () {
   Serial.begin(9600);
@@ -89,13 +93,22 @@ void setup () {
   pinMode(goodLED, OUTPUT);
   pinMode(badLED,OUTPUT);
 }
-
+//take 5 readings, get the average of them.
+/*int getBestReading(){
+  int i;
+  int level = 0;
+  for (level; i < 5; i++){
+    level =  level + SoilMoisture();
+  }
+  level = level / 5;
+  return level;
+}*/
 void loop (void) {
-  moisture=SoilMoisture(); // assign the result of SoilMoisture() to the global variable 'moisture'
+  moisture=SoilMoisture(); // assign the average to moisture
   Serial.print("[*] Soil moisture: ");
   Serial.print(moisture); // print the analogical measurement of the experiment
   Serial.println();
-  if (moisture >= 300)
+  if (moisture >= 150)
   {
     digitalWrite(goodLED, HIGH);
     digitalWrite(badLED, LOW);

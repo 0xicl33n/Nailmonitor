@@ -41,7 +41,7 @@ const int wet = 300;
 //
 int moisture; // analogical value obtained from the experiment
 
-int SoilMoisture(){
+int SoilMoisture(top,bottom){
   int reading;
   digitalWrite(progressLED, HIGH);
   digitalWrite(goodLED, LOW);// clear leds
