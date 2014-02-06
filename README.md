@@ -12,3 +12,31 @@ probes attached. Didnt work very well.
 moisture_function_average is the same moisture_function only now it
 takes 5 readings and calculates the average for them all, and then uses
 that. Im currently using this one on my arduino.
+
+
+
+reply #7 is where this code comes from 
+
+http://forum.arduino.cc/index.php/topic,37975.0.html
+
+Layout:
+
+
+           digital 2---*
+                 |
+                 \
+                 /
+                 \ R1
+                 /
+                 |
+                 |
+         analog 0----*
+                 |
+                 |
+                 *----> nail 1
+                 
+                 *----> nail 2
+                 |
+                 |
+                 |
+           digital 3---*
